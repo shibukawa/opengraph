@@ -1,0 +1,16 @@
+<%!
+import "github.com/shibukawa/opengraph"
+%>
+
+<%: func WriteHTML(og opengraph.OpenGraph, buffer *bytes.Buffer) %>
+<!DOCTYPE html>
+<html lang="en">
+<head <%== opengraph.NameSpace %> >
+    <meta charset="UTF-8">
+    <%== og.Write() %>
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+</html>

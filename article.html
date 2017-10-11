@@ -1,0 +1,62 @@
+<%!
+import "io"
+import "time"
+
+func (a *Article) Write() string {
+    var buffer bytes.Buffer
+    a.write(&buffer)
+    return buffer.String()
+}
+%>
+
+<%# Write generates open graph contents for webpage %>
+<%: func (a *Article) write(buffer *bytes.Buffer) %>
+<meta property="og:type" content="artcle" />
+<meta content="<%= a.description %>" name="description" />
+<meta content="summary" name="twitter:card" />
+<meta content="<%= a.profile.twitterID %>" name="twitter:site" />
+<% if a.Creator != "" { %><meta content="<%= a.Creator %>" name="twitter:creator" /><% } %>
+<meta content="<%= a.title %>" property="og:title" />
+<meta content="<%= a.url %>" property="og:url" />
+<meta content="<%= a.imageUrl %>" property="og:image" />
+<meta content="<%= a.description %>" property="og:description" />
+<meta content="<%= a.profile.siteName %>" property="og:site_name" />
+<meta content="<%= a.profile.facebookAppID %>" property="fb:admins" />
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "NewsArticle",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "<%= a.url %>"
+  },
+  "headline": "<%= a.title %>",
+  "image": [
+    "<%= a.imageUrl %>"
+   ],
+  "datePublished": "<%= a.pubTime.Format(time.RFC3339) %>",
+  "dateModified": "<%= a.modTime.Format(time.RFC3339) %>",
+  "author": {
+    <% if a.profile.author == "" { %>
+    "@type": "Organization",
+    "name": "<%= a.profile.orgName %>",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "<%= a.profile.orgLogoURL %>"
+    }
+    <% } else { %>
+      "@type": "Person",
+      "name": "<%= a.profile.author %>"
+    <% } %>
+  },
+   "publisher": {
+    "@type": "Organization",
+    "name": "<%= a.profile.orgName %>",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "<%= a.profile.orgLogoURL %>"
+    }
+  },
+  "description": "<%= a.description %>"
+}
+</script>
